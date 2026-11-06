@@ -2,6 +2,9 @@ name: win 11 + tailscale + Download.bat script
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   secure-rdp:
@@ -53,7 +56,8 @@ jobs:
           net localgroup "Remote Desktop Users" RDP /add
 
           # 3. Ensure password and account never expire
-          Set-LocalUser -Name "RDP" -PasswordNeverExpires $true -AccountNeverExpires $true -ErrorAction SilentlyContinue
+          Set-LocalUser -Name "RDP" -PasswordNeverExpires $true -AccountNeverExpires -ErrorAction SilentlyContinue
+          wmic useraccount where name='RDP' set PasswordExpires=FALSE
 
           echo "RDP_PASSWORD=$password" >> $env:GITHUB_ENV
           echo "RDP_CREDS=User: RDP | Password: $password" >> $env:GITHUB_ENV
@@ -148,4 +152,3 @@ jobs:
               Write-Host "[$(Get-Date)] RDP Active - Use Ctrl+C in workflow to terminate"
               Start-Sleep -Seconds 300
           }
-
