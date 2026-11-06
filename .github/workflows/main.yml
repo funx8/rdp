@@ -57,7 +57,6 @@ jobs:
 
           # 3. Ensure password and account never expire
           Set-LocalUser -Name "RDP" -PasswordNeverExpires $true -AccountNeverExpires -ErrorAction SilentlyContinue
-          wmic useraccount where name='RDP' set PasswordExpires=FALSE
 
           echo "RDP_PASSWORD=$password" >> $env:GITHUB_ENV
           echo "RDP_CREDS=User: RDP | Password: $password" >> $env:GITHUB_ENV
